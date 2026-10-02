@@ -1,0 +1,129 @@
+```html
+<!DOCTYPE html>
+<html lang="bg">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#111827">
+  <title>Моето парно</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+      padding: 24px 16px;
+    }
+    main { max-width: 850px; margin: auto; }
+    header { margin-bottom: 28px; }
+    .eyebrow { color: #fb923c; font-size: 13px; letter-spacing: 2px; }
+    h1 { margin: 8px 0; font-size: 30px; }
+    .muted { color: #94a3b8; font-size: 14px; }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+    .card {
+      background: #151e30;
+      border: 1px solid #283449;
+      border-radius: 18px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .label { color: #aab7ca; font-size: 14px; }
+    .value { font-size: 34px; font-weight: bold; margin: 14px 0 8px; }
+    .icon { font-size: 25px; }
+    h2 { font-size: 19px; margin: 8px 0 18px; }
+    button {
+      width: 100%;
+      padding: 14px;
+      border: 0;
+      border-radius: 11px;
+      background: #f97316;
+      color: white;
+      font-weight: bold;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    button.secondary { background: #334155; }
+    button:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+    .warning {
+      background: #302417;
+      border: 1px solid #80521e;
+      color: #fcd9a5;
+      border-radius: 12px;
+      padding: 12px;
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 20px;
+    }
+    footer { color: #64748b; font-size: 12px; text-align: center; margin-top: 24px; }
+    @media (max-width: 480px) {
+      body { padding: 20px 12px; }
+      .card { padding: 15px; }
+      .value { font-size: 28px; }
+      h1 { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div class="eyebrow">SMART HOME · ESP32</div>
+    <h1>🔥 Моето парно</h1>
+    <div class="muted">Табло за управление и наблюдение</div>
+  </header>
+
+  <div class="grid">
+    <section class="card">
+      <div class="icon">🌡️</div>
+      <p class="label">Температура на водата</p>
+      <div class="value" id="temperature">-- °C</div>
+      <div class="muted">Чакаме връзка с датчика</div>
+    </section>
+
+    <section class="card">
+      <div class="icon">🟠</div>
+      <p class="label">Ниво на пелетите</p>
+      <div class="value" id="pellets">-- %</div>
+      <div class="muted">Нужно е калибриране на резервоара</div>
+    </section>
+  </div>
+
+  <section class="card">
+    <h2>⚡ Управление на парното</h2>
+    <p class="label">Реле 1 · Включване / изключване</p>
+    <button class="secondary" id="heating" onclick="demo('heating')">
+      Демо: парното е изключено
+    </button>
+  </section>
+
+  <section class="card">
+    <h2>🔄 Рестарт</h2>
+    <p class="label">Реле 2 · Команда за рестарт</p>
+    <button onclick="demo('restart')">Тест на бутона (демо)</button>
+  </section>
+
+  <div class="warning">
+    ⚠️ ДЕМО РЕЖИМ: Тази страница не е свързана с ESP32.
+    Показаните бутони не управляват реално релетата.
+    Не разчитай на нея за безопасността на отоплителната система.
+  </div>
+
+  <footer>Моето парно · Локален контролер ESP32</footer>
+</main>
+
+<script>
+  function demo(action) {
+    if (action === 'heating') {
+      alert('Демо режим: командата не е изпратена към ESP32.');
+    } else {
+      alert('Демо режим: рестартът не е изпълнен.');
+    }
+  }
+</script>
+</body>
+</html>
+```
