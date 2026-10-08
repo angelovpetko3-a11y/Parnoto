@@ -1,293 +1,227 @@
+
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Моето парно</title>
-
-    <style>
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #0f172a;
-            color: white;
-        }
-
-        .container {
-            width: 100%;
-            max-width: 900px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        header {
-            padding: 20px 0;
-        }
-
-        h1 {
-            margin: 0;
-            font-size: 32px;
-        }
-
-        .subtitle {
-            color: #94a3b8;
-            margin-top: 8px;
-        }
-
-        .status {
-            display: inline-block;
-            margin-top: 15px;
-            padding: 8px 14px;
-            border-radius: 20px;
-            background: #14532d;
-            color: #86efac;
-            font-size: 14px;
-        }
-
-        .cards {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .card {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 20px;
-            padding: 22px;
-        }
-
-        .icon {
-            font-size: 32px;
-        }
-
-        .title {
-            color: #94a3b8;
-            margin-top: 12px;
-        }
-
-        .value {
-            font-size: 38px;
-            font-weight: bold;
-            margin-top: 8px;
-        }
-
-        .controls {
-            margin-top: 20px;
-        }
-
-        .control {
-            background: #1e293b;
-            border: 1px solid #334155;
-            border-radius: 20px;
-            padding: 22px;
-            margin-bottom: 15px;
-        }
-
-        .control h2 {
-            margin-top: 0;
-        }
-
-        button {
-            width: 100%;
-            border: none;
-            border-radius: 14px;
-            padding: 16px;
-            margin-top: 12px;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-            background: #2563eb;
-            color: white;
-        }
-
-        button:hover {
-            opacity: 0.9;
-        }
-
-        .off {
-            background: #475569;
-        }
-
-        .danger {
-            background: #dc2626;
-        }
-
-        .info {
-            margin-top: 20px;
-            padding: 15px;
-            border-radius: 15px;
-            background: #422006;
-            color: #fed7aa;
-            font-size: 14px;
-        }
-
-        footer {
-            text-align: center;
-            color: #64748b;
-            margin-top: 30px;
-            padding-bottom: 20px;
-        }
-
-        @media (max-width: 600px) {
-            .cards {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 28px;
-            }
-
-            .value {
-                font-size: 34px;
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Моето парно</title>
+<style>
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #0f172a;
+  color: white;
+}
+.container {
+  max-width: 850px;
+  margin: auto;
+  padding: 20px;
+}
+h1 { font-size: 30px; }
+.subtitle { color: #94a3b8; }
+.card {
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 18px;
+  padding: 22px;
+  margin-top: 16px;
+}
+.cards {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+.label { color: #94a3b8; }
+.value {
+  font-size: 36px;
+  font-weight: bold;
+  margin-top: 12px;
+}
+input, button {
+  width: 100%;
+  padding: 14px;
+  margin-top: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+}
+button {
+  background: #2563eb;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+button:disabled {
+  background: #475569;
+  cursor: not-allowed;
+}
+input { background: white; color: #111827; }
+.status { color: #86efac; margin-top: 15px; }
+.warning { color: #fed7aa; }
+.error { color: #fca5a5; }
+.hidden { display: none; }
+@media(max-width:600px) {
+  .cards { grid-template-columns: 1fr; }
+}
+</style>
 </head>
-
 <body>
 
 <div class="container">
+  <h1>🔥 Моето парно</h1>
+  <p class="subtitle">Дистанционно наблюдение на отоплението</p>
 
-    <header>
-        <h1>🔥 Моето парно</h1>
+  <section id="loginPanel" class="card">
+    <h2>🔐 Вход</h2>
+    <input id="email" type="email" placeholder="Имейл">
+    <input id="password" type="password" placeholder="Парола">
+    <button id="loginButton">Влез</button>
+    <p id="loginError" class="error"></p>
+  </section>
 
-        <div class="subtitle">
-            Управление на отоплителната система
-        </div>
-
-        <div class="status">
-            ● Системата е онлайн
-        </div>
-    </header>
-
+  <section id="dashboard" class="hidden">
+    <p id="status" class="status">Свързване с Firebase...</p>
 
     <div class="cards">
-
-        <div class="card">
-            <div class="icon">🌡️</div>
-
-            <div class="title">
-                Температура на водата
-            </div>
-
-            <div class="value" id="temperature">
-                -- °C
-            </div>
-        </div>
-
-
-        <div class="card">
-            <div class="icon">🪵</div>
-
-            <div class="title">
-                Ниво на пелетите
-            </div>
-
-            <div class="value" id="pellets">
-                -- %
-            </div>
-        </div>
-
+      <div class="card">
+        <div>🌡️ Температура на водата</div>
+        <div id="temperature" class="value">-- °C</div>
+      </div>
+      <div class="card">
+        <div>🪵 Ниво на пелетите</div>
+        <div id="pellets" class="value">-- %</div>
+      </div>
     </div>
 
-
-    <div class="controls">
-
-        <div class="control">
-
-            <h2>🔥 Парно</h2>
-
-            <div class="title">
-                Управление на реле 1
-            </div>
-
-            <button id="heatingButton"
-                    onclick="toggleHeating()">
-                Включи парното
-            </button>
-
-        </div>
-
-
-        <div class="control">
-
-            <h2>🔄 Рестарт</h2>
-
-            <div class="title">
-                Управление на реле 2
-            </div>
-
-            <button class="danger"
-                    onclick="restartSystem()">
-                Рестартирай
-            </button>
-
-        </div>
-
+    <div class="card">
+      <h2>🔥 Парно</h2>
+      <button disabled>Включи / изключи — предстои</button>
     </div>
 
-
-    <div class="info">
-        ⚠️ ДЕМО РЕЖИМ — тази страница все още не е свързана с ESP32.
-        Бутоните не управляват реалното парно.
+    <div class="card">
+      <h2>🔄 Рестарт</h2>
+      <button disabled>Рестартирай — предстои</button>
     </div>
 
+    <div class="card warning">
+      ⚠️ Релетата още не се управляват от тази страница.
+    </div>
 
-    <footer>
-        Моето парно • ESP32
-    </footer>
-
+    <button id="logoutButton">Изход</button>
+  </section>
 </div>
 
+<script type="module">
+import { initializeApp } from
+  "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-<script>
+import {
+  getAuth, signInWithEmailAndPassword,
+  onAuthStateChanged, signOut
+} from
+  "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-let heating = false;
+import {
+  getDatabase, ref, onValue
+} from
+  "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
+// Firebase конфигурация
+const firebaseConfig = {
+  apiKey: "AIzaSyCjqK4op1UZqWLd31UWLNuoNosoC1y4lWM",
+  authDomain: "moeto-parno.firebaseapp.com",
+  databaseURL: "https://moeto-parno-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "moeto-parno",
+  storageBucket: "moeto-parno.firebasestorage.app",
+  messagingSenderId: "737083575899",
+  appId: "1:737083575899:web:3b5d95d08fe29299c8797e"
+};
 
-function toggleHeating() {
+const allowedUid = "lkHeobhIT3MSLi04cRa8AWnM5mW2";
 
-    heating = !heating;
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getDatabase(app);
 
-    const button =
-        document.getElementById("heatingButton");
+const loginPanel = document.getElementById("loginPanel");
+const dashboard = document.getElementById("dashboard");
+const status = document.getElementById("status");
+const loginError = document.getElementById("loginError");
 
-    if (heating) {
+let unsubscribe = null;
 
-        button.innerText = "Изключи парното";
-        button.classList.remove("off");
+document.getElementById("loginButton").onclick = async () => {
+  loginError.textContent = "";
 
-    } else {
+  try {
+    await signInWithEmailAndPassword(
+      auth,
+      document.getElementById("email").value.trim(),
+      document.getElementById("password").value
+    );
+  } catch (error) {
+    loginError.textContent =
+      "Неуспешен вход. Провери имейла и паролата.";
+  }
+};
 
-        button.innerText = "Включи парното";
-        button.classList.add("off");
+document.getElementById("logoutButton").onclick = () => {
+  signOut(auth);
+};
 
+onAuthStateChanged(auth, async (user) => {
+  if (unsubscribe) {
+    unsubscribe();
+    unsubscribe = null;
+  }
+
+  if (!user) {
+    loginPanel.classList.remove("hidden");
+    dashboard.classList.add("hidden");
+    return;
+  }
+
+  if (user.uid !== allowedUid) {
+    await signOut(auth);
+    loginError.textContent = "Този акаунт няма достъп.";
+    return;
+  }
+
+  loginPanel.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+
+  status.textContent = "Свързване с базата...";
+
+  unsubscribe = onValue(
+    ref(db, "sensors"),
+    (snapshot) => {
+      const data = snapshot.val();
+
+      if (!data) {
+        status.textContent =
+          "Връзката работи. Очакваме данни от ESP8266.";
+        return;
+      }
+
+      document.getElementById("temperature").textContent =
+        typeof data.temperature === "number"
+          ? data.temperature.toFixed(1) + " °C"
+          : "-- °C";
+
+      document.getElementById("pellets").textContent =
+        typeof data.pellets === "number"
+          ? data.pellets + " %"
+          : "-- %";
+
+      status.textContent = "● Свързано с Firebase";
+    },
+    (error) => {
+      status.textContent = "Грешка при четене на базата.";
+      console.error(error);
     }
-
-}
-
-
-function restartSystem() {
-
-    const answer =
-        confirm("Сигурен ли си, че искаш да рестартираш системата?");
-
-    if (answer) {
-
-        alert("Демо режим: рестартът още не е свързан с ESP32.");
-
-    }
-
-}
-
+  );
+});
 </script>
-
 </body>
 </html>
