@@ -2,226 +2,320 @@
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Моето парно</title>
-<style>
-* { box-sizing: border-box; }
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #0f172a;
-  color: white;
-}
-.container {
-  max-width: 850px;
-  margin: auto;
-  padding: 20px;
-}
-h1 { font-size: 30px; }
-.subtitle { color: #94a3b8; }
-.card {
-  background: #1e293b;
-  border: 1px solid #334155;
-  border-radius: 18px;
-  padding: 22px;
-  margin-top: 16px;
-}
-.cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 15px;
-}
-.label { color: #94a3b8; }
-.value {
-  font-size: 36px;
-  font-weight: bold;
-  margin-top: 12px;
-}
-input, button {
-  width: 100%;
-  padding: 14px;
-  margin-top: 12px;
-  border: none;
-  border-radius: 10px;
-  font-size: 16px;
-}
-button {
-  background: #2563eb;
-  color: white;
-  font-weight: bold;
-  cursor: pointer;
-}
-button:disabled {
-  background: #475569;
-  cursor: not-allowed;
-}
-input { background: white; color: #111827; }
-.status { color: #86efac; margin-top: 15px; }
-.warning { color: #fed7aa; }
-.error { color: #fca5a5; }
-.hidden { display: none; }
-@media(max-width:600px) {
-  .cards { grid-template-columns: 1fr; }
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>🔥 Моето парно</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #101827;
+      color: white;
+    }
+    .container {
+      max-width: 650px;
+      margin: auto;
+    }
+    h1 { text-align: center; }
+    .card {
+      background: #1e293b;
+      padding: 22px;
+      border-radius: 16px;
+      margin: 15px 0;
+    }
+    .label {
+      color: #cbd5e1;
+      font-size: 18px;
+    }
+    .value {
+      font-size: 38px;
+      font-weight: bold;
+      margin-top: 12px;
+    }
+    .bar {
+      height: 18px;
+      background: #334155;
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 15px;
+    }
+    .fill {
+      height: 100%;
+      width: 0%;
+      background: #22c55e;
+      transition: width 0.4s;
+    }
+    .water { background: #38bdf8; }
+    input[type="range"] {
+      width: 100%;
+      margin: 22px 0;
+    }
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border-radius: 8px;
+      border: none;
+    }
+    button {
+      background: #f97316;
+      color: white;
+      border: none;
+      padding: 13px 20px;
+      border-radius: 9px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    button:disabled { opacity: 0.5; }
+    .hidden { display: none; }
+    .status {
+      color: #fbbf24;
+      text-align: center;
+      margin: 15px 0;
+    }
+    .small {
+      color: #94a3b8;
+      font-size: 14px;
+    }
+  </style>
 </head>
 <body>
-
 <div class="container">
   <h1>🔥 Моето парно</h1>
-  <p class="subtitle">Дистанционно наблюдение на отоплението</p>
 
-  <section id="loginPanel" class="card">
+  <div id="status" class="status">
+    Свързване с Firebase...
+  </div>
+
+  <div id="loginBox" class="card">
     <h2>🔐 Вход</h2>
-    <input id="email" type="email" placeholder="Имейл">
-    <input id="password" type="password" placeholder="Парола">
-    <button id="loginButton">Влез</button>
-    <p id="loginError" class="error"></p>
-  </section>
+    <input id="email" type="email"
+           placeholder="Firebase имейл">
+    <input id="password" type="password"
+           placeholder="Парола">
+    <button id="loginBtn">Вход</button>
+  </div>
 
-  <section id="dashboard" class="hidden">
-    <p id="status" class="status">Свързване с Firebase...</p>
+  <div id="dashboard" class="hidden">
+    <div class="card">
+      <div class="label">🌡️ Температура на водата</div>
+      <div id="temperature" class="value">-- °C</div>
+    </div>
 
-    <div class="cards">
-      <div class="card">
-        <div>🌡️ Температура на водата</div>
-        <div id="temperature" class="value">-- °C</div>
-      </div>
-      <div class="card">
-        <div>🪵 Ниво на пелетите</div>
-        <div id="pellets" class="value">-- %</div>
+    <div class="card">
+      <div class="label">🌾 Ниво на пелетите</div>
+      <div id="pellets" class="value">-- %</div>
+      <div class="bar">
+        <div id="pelletsBar" class="fill"></div>
       </div>
     </div>
 
     <div class="card">
-      <h2>🔥 Парно</h2>
-      <button disabled>Включи / изключи — предстои</button>
+      <div class="label">💧 Ниво на водата в хидрофора</div>
+      <div id="hydrofor" class="value">-- %</div>
+      <div class="bar">
+        <div id="hydroforBar" class="fill water"></div>
+      </div>
     </div>
 
     <div class="card">
-      <h2>🔄 Рестарт</h2>
-      <button disabled>Рестартирай — предстои</button>
+      <div class="label">🎚️ Желана температура</div>
+      <div id="targetValue" class="value">50 °C</div>
+      <input id="targetSlider"
+             type="range"
+             min="30"
+             max="65"
+             step="1"
+             value="50">
+      <button id="saveTarget">Запази температурата</button>
+      <p class="small">
+        Настройката се записва във Firebase.
+      </p>
     </div>
 
-    <div class="card warning">
-      ⚠️ Релетата още не се управляват от тази страница.
+    <div class="card">
+      <button id="logoutBtn">Изход</button>
     </div>
-
-    <button id="logoutButton">Изход</button>
-  </section>
+  </div>
 </div>
 
 <script type="module">
-import { initializeApp } from
-  "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 
-import {
-  getAuth, signInWithEmailAndPassword,
-  onAuthStateChanged, signOut
-} from
-  "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+  import {
+    getAuth,
+    signInWithEmailAndPassword,
+    onAuthStateChanged,
+    signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 
-import {
-  getDatabase, ref, onValue
-} from
-  "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+  import {
+    getDatabase,
+    ref,
+    onValue,
+    set
+  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-// Firebase конфигурация
-const firebaseConfig = {
-  apiKey: "AIzaSyCjqK4oplUZqWLd31UWLNuoNosoC1y4lWM",
-  authDomain: "moeto-parno.firebaseapp.com",
-  databaseURL: "https://moeto-parno-default-rtdb.europe-west1.firebasedatabase.app",
-  projectId: "moeto-parno",
-  storageBucket: "moeto-parno.firebasestorage.app",
-  messagingSenderId: "737083575899",
-  appId: "1:737083575899:web:3b5d95d08fe29299c8797e"
-};
+  // ПОПЪЛНИ ДАННИТЕ ОТ FIREBASE → PROJECT SETTINGS
+  const firebaseConfig = {
+    apiKey: "ТВОЯ_FIREBASE_API_KEY",
+    authDomain: "moeto-parno.firebaseapp.com",
+    databaseURL: "https://moeto-parno-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "moeto-parno",
+    storageBucket: "moeto-parno.firebasestorage.app",
+    messagingSenderId: "ТВОЯ_MESSAGING_SENDER_ID",
+    appId: "ТВОЯ_APP_ID"
+  };
 
-const allowedUid = "lkHeobhIT3MSLi04cRa8AWnM5mW2";
+  const ALLOWED_UID = "ТВОЯ_FIREBASE_USER_UID";
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getDatabase(app);
+  const statusEl = document.getElementById("status");
+  const loginBox = document.getElementById("loginBox");
+  const dashboard = document.getElementById("dashboard");
 
-const loginPanel = document.getElementById("loginPanel");
-const dashboard = document.getElementById("dashboard");
-const status = document.getElementById("status");
-const loginError = document.getElementById("loginError");
-
-let unsubscribe = null;
-
-document.getElementById("loginButton").onclick = async () => {
-  loginError.textContent = "";
-
-  try {
-    await signInWithEmailAndPassword(
-      auth,
-      document.getElementById("email").value.trim(),
-      document.getElementById("password").value
-    );
-  } catch (error) {
-    loginError.textContent =
-      "Неуспешен вход. Провери имейла и паролата.";
-  }
-};
-
-document.getElementById("logoutButton").onclick = () => {
-  signOut(auth);
-};
-
-onAuthStateChanged(auth, async (user) => {
-  if (unsubscribe) {
-    unsubscribe();
-    unsubscribe = null;
+  function status(message) {
+    statusEl.textContent = message;
   }
 
-  if (!user) {
-    loginPanel.classList.remove("hidden");
-    dashboard.classList.add("hidden");
-    return;
+  function showNumber(id, value, unit, decimals = 0) {
+    const el = document.getElementById(id);
+    const n = Number(value);
+
+    el.textContent =
+      value !== null &&
+      value !== undefined &&
+      value !== "" &&
+      Number.isFinite(n)
+        ? n.toFixed(decimals) + " " + unit
+        : "-- " + unit;
   }
 
-  if (user.uid !== allowedUid) {
-    await signOut(auth);
-    loginError.textContent = "Този акаунт няма достъп.";
-    return;
+  function showPercent(id, barId, value) {
+    const n = Number(value);
+    const valid =
+      value !== null &&
+      value !== undefined &&
+      value !== "" &&
+      Number.isFinite(n);
+
+    document.getElementById(id).textContent =
+      valid ? Math.round(n) + " %" : "-- %";
+
+    document.getElementById(barId).style.width =
+      valid ? Math.max(0, Math.min(100, n)) + "%" : "0%";
   }
 
-  loginPanel.classList.add("hidden");
-  dashboard.classList.remove("hidden");
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getDatabase(app);
 
-  status.textContent = "Свързване с базата...";
+  let unsubscribeSensors = null;
+  let unsubscribeTarget = null;
 
-  unsubscribe = onValue(
-    ref(db, "sensors"),
-    (snapshot) => {
-      const data = snapshot.val();
+  document.getElementById("loginBtn").onclick = async () => {
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
 
-      if (!data) {
-        status.textContent =
-          "Връзката работи. Очакваме данни от ESP8266.";
-        return;
-      }
-
-      document.getElementById("temperature").textContent =
-        typeof data.temperature === "number"
-          ? data.temperature.toFixed(1) + " °C"
-          : "-- °C";
-
-      document.getElementById("pellets").textContent =
-        typeof data.pellets === "number"
-          ? data.pellets + " %"
-          : "-- %";
-
-      status.textContent = "● Свързано с Firebase";
-    },
-    (error) => {
-      status.textContent = "Грешка при четене на базата.";
-      console.error(error);
+    try {
+      status("Влизане...");
+      await signInWithEmailAndPassword(auth, email, password);
+      document.getElementById("password").value = "";
+    } catch (error) {
+      status("Грешка при вход: " + error.code);
     }
-  );
-});
+  };
+
+  document.getElementById("logoutBtn").onclick = () => {
+    signOut(auth);
+  };
+
+  onAuthStateChanged(auth, async (user) => {
+    if (unsubscribeSensors) {
+      unsubscribeSensors();
+      unsubscribeSensors = null;
+    }
+    if (unsubscribeTarget) {
+      unsubscribeTarget();
+      unsubscribeTarget = null;
+    }
+
+    if (!user) {
+      dashboard.classList.add("hidden");
+      loginBox.classList.remove("hidden");
+      status("Въведи Firebase имейл и парола.");
+      return;
+    }
+
+    if (user.uid !== ALLOWED_UID) {
+      status("Този потребител няма достъп.");
+      await signOut(auth);
+      return;
+    }
+
+    loginBox.classList.add("hidden");
+    dashboard.classList.remove("hidden");
+    status("Свързано с Firebase.");
+
+    unsubscribeSensors = onValue(
+      ref(db, "sensors"),
+      (snapshot) => {
+        const data = snapshot.val() || {};
+
+        showNumber("temperature", data.temperature, "°C", 1);
+        showPercent("pellets", "pelletsBar", data.pellets);
+        showPercent("hydrofor", "hydroforBar", data.hydrofor);
+      },
+      (error) => {
+        status("Грешка при четене на датчиците: " + error.message);
+      }
+    );
+
+    unsubscribeTarget = onValue(
+      ref(db, "settings/target"),
+      (snapshot) => {
+        const value = Number(snapshot.val());
+
+        if (snapshot.exists() &&
+            Number.isFinite(value) &&
+            value >= 30 &&
+            value <= 65) {
+          document.getElementById("targetSlider").value = value;
+          document.getElementById("targetValue").textContent =
+            value + " °C";
+        }
+      },
+      (error) => {
+        status("Грешка при четене на настройката: " + error.message);
+      }
+    );
+  });
+
+  const slider = document.getElementById("targetSlider");
+
+  slider.oninput = () => {
+    document.getElementById("targetValue").textContent =
+      slider.value + " °C";
+  };
+
+  document.getElementById("saveTarget").onclick = async () => {
+    const target = Number(slider.value);
+    const button = document.getElementById("saveTarget");
+
+    button.disabled = true;
+
+    try {
+      await set(ref(db, "settings/target"), target);
+      status("Желаната температура е записана: " + target + " °C");
+    } catch (error) {
+      status("Грешка при запис: " + error.message);
+    } finally {
+      button.disabled = false;
+    }
+  };
 </script>
 </body>
 </html>
