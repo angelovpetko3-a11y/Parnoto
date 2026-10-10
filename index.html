@@ -1,321 +1,71 @@
-
 <!DOCTYPE html>
 <html lang="bg">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>🔥 Моето парно</title>
-  <style>
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      padding: 20px;
-      font-family: Arial, sans-serif;
-      background: #101827;
-      color: white;
-    }
-    .container {
-      max-width: 650px;
-      margin: auto;
-    }
-    h1 { text-align: center; }
-    .card {
-      background: #1e293b;
-      padding: 22px;
-      border-radius: 16px;
-      margin: 15px 0;
-    }
-    .label {
-      color: #cbd5e1;
-      font-size: 18px;
-    }
-    .value {
-      font-size: 38px;
-      font-weight: bold;
-      margin-top: 12px;
-    }
-    .bar {
-      height: 18px;
-      background: #334155;
-      border-radius: 20px;
-      overflow: hidden;
-      margin-top: 15px;
-    }
-    .fill {
-      height: 100%;
-      width: 0%;
-      background: #22c55e;
-      transition: width 0.4s;
-    }
-    .water { background: #38bdf8; }
-    input[type="range"] {
-      width: 100%;
-      margin: 22px 0;
-    }
-    input[type="email"],
-    input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      margin: 8px 0;
-      border-radius: 8px;
-      border: none;
-    }
-    button {
-      background: #f97316;
-      color: white;
-      border: none;
-      padding: 13px 20px;
-      border-radius: 9px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    button:disabled { opacity: 0.5; }
-    .hidden { display: none; }
-    .status {
-      color: #fbbf24;
-      text-align: center;
-      margin: 15px 0;
-    }
-    .small {
-      color: #94a3b8;
-      font-size: 14px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>🔥 Моето парно</title>
+<style>
+*{box-sizing:border-box}body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#101827;color:#fff}.container{max-width:650px;margin:auto}h1{text-align:center}.card{background:#1e293b;padding:22px;border-radius:16px;margin:15px 0}.label{color:#cbd5e1;font-size:18px}.value{font-size:38px;font-weight:bold;margin-top:12px}.bar{height:18px;background:#334155;border-radius:20px;overflow:hidden;margin-top:15px}.fill{height:100%;width:0;background:#22c55e;transition:width .4s}.water{background:#38bdf8}input[type=range]{width:100%;margin:22px 0}input[type=email],input[type=password]{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:0;font-size:16px}button{background:#f97316;color:#fff;border:0;padding:13px 20px;border-radius:9px;font-size:16px;cursor:pointer}button:disabled{opacity:.5}.hidden{display:none}.status{color:#fbbf24;text-align:center;margin:15px 0;overflow-wrap:anywhere}.small{color:#94a3b8;font-size:14px}
+</style>
 </head>
 <body>
 <div class="container">
-  <h1>🔥 Моето парно</h1>
-
-  <div id="status" class="status">
-    Свързване с Firebase...
-  </div>
-
-  <div id="loginBox" class="card">
-    <h2>🔐 Вход</h2>
-    <input id="email" type="angelovpetko3@gmail.com"
-           placeholder="angelovpetko3@gmail.com">
-    <input id="password" type="12345678"
-           placeholder="Парола">
-    <button id="loginBtn">Вход</button>
-  </div>
-
-  <div id="dashboard" class="hidden">
-    <div class="card">
-      <div class="label">🌡️ Температура на водата</div>
-      <div id="temperature" class="value">-- °C</div>
-    </div>
-
-    <div class="card">
-      <div class="label">🌾 Ниво на пелетите</div>
-      <div id="pellets" class="value">-- %</div>
-      <div class="bar">
-        <div id="pelletsBar" class="fill"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="label">💧 Ниво на водата в хидрофора</div>
-      <div id="hydrofor" class="value">-- %</div>
-      <div class="bar">
-        <div id="hydroforBar" class="fill water"></div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="label">🎚️ Желана температура</div>
-      <div id="targetValue" class="value">50 °C</div>
-      <input id="targetSlider"
-             type="range"
-             min="30"
-             max="65"
-             step="1"
-             value="50">
-      <button id="saveTarget">Запази температурата</button>
-      <p class="small">
-        Настройката се записва във Firebase.
-      </p>
-    </div>
-
-    <div class="card">
-      <button id="logoutBtn">Изход</button>
-    </div>
-  </div>
+<h1>🔥 Моето парно</h1>
+<div id="status" class="status">Свързване с Firebase...</div>
+<div id="loginBox" class="card">
+<h2>🔐 Вход</h2>
+<form id="loginForm">
+<input id="email" type="email" autocomplete="username" placeholder="Firebase имейл" required>
+<input id="password" type="password" autocomplete="current-password" placeholder="Парола" required>
+<button id="loginBtn" type="submit">Вход</button>
+</form>
 </div>
-
+<div id="dashboard" class="hidden">
+<div class="card"><div class="label">🌡️ Температура на водата</div><div id="temperature" class="value">-- °C</div></div>
+<div class="card"><div class="label">🌾 Ниво на пелетите</div><div id="pellets" class="value">-- %</div><div class="bar"><div id="pelletsBar" class="fill"></div></div></div>
+<div class="card"><div class="label">💧 Ниво на водата в хидрофора</div><div id="hydrofor" class="value">-- %</div><div class="bar"><div id="hydroforBar" class="fill water"></div></div></div>
+<div class="card"><div class="label">🎚️ Желана температура</div><div id="targetValue" class="value">-- °C</div><input id="targetSlider" type="range" min="30" max="65" step="1" value="55" disabled><button id="saveTarget" disabled>Запази температурата</button><p class="small">Настройката се записва във Firebase и се получава от NodeMCU.</p></div>
+<div class="card"><button id="logoutBtn">Изход</button></div>
+</div>
+</div>
 <script type="module">
-  import { initializeApp }
-    from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
+import {getDatabase,ref,onValue,set} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
 
-  import {
-    getAuth,
-    signInWithEmailAndPassword,
-    onAuthStateChanged,
-    signOut
-  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
-
-  import {
-    getDatabase,
-    ref,
-    onValue,
-    set
-  } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
-
-  // ПОПЪЛНИ ДАННИТЕ ОТ FIREBASE → PROJECT SETTINGS
-  const firebaseConfig = {
-    apiKey: "AIzaSyCjqK4oplUZqWLd31UWLNuoNosoC1y4lWM",
-    authDomain: "mmoeto-parno.firebaseapp.com",
-    databaseURL: "https://moeto-parno-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "moeto-parno",
-    storageBucket: "moeto-parno.firebasestorage.app",
-    messagingSenderId: "737083575899",
-    appId: "1:737083575899:web:3b5d95d08fe29299c8797e"
-  };
-
-  const ALLOWED_UID = "ТВОЯ_FIREBASE_USER_UID";
-
-  const statusEl = document.getElementById("status");
-  const loginBox = document.getElementById("loginBox");
-  const dashboard = document.getElementById("dashboard");
-
-  function status(message) {
-    statusEl.textContent = message;
-  }
-
-  function showNumber(id, value, unit, decimals = 0) {
-    const el = document.getElementById(id);
-    const n = Number(value);
-
-    el.textContent =
-      value !== null &&
-      value !== undefined &&
-      value !== "" &&
-      Number.isFinite(n)
-        ? n.toFixed(decimals) + " " + unit
-        : "-- " + unit;
-  }
-
-  function showPercent(id, barId, value) {
-    const n = Number(value);
-    const valid =
-      value !== null &&
-      value !== undefined &&
-      value !== "" &&
-      Number.isFinite(n);
-
-    document.getElementById(id).textContent =
-      valid ? Math.round(n) + " %" : "-- %";
-
-    document.getElementById(barId).style.width =
-      valid ? Math.max(0, Math.min(100, n)) + "%" : "0%";
-  }
-
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getDatabase(app);
-
-  let unsubscribeSensors = null;
-  let unsubscribeTarget = null;
-
-  document.getElementById("loginBtn").onclick = async () => {
-    const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value;
-
-    try {
-      status("Влизане...");
-      await signInWithEmailAndPassword(auth, email, password);
-      document.getElementById("password").value = "";
-    } catch (error) {
-      status("Грешка при вход: " + error.code);
-    }
-  };
-
-  document.getElementById("logoutBtn").onclick = () => {
-    signOut(auth);
-  };
-
-  onAuthStateChanged(auth, async (user) => {
-    if (unsubscribeSensors) {
-      unsubscribeSensors();
-      unsubscribeSensors = null;
-    }
-    if (unsubscribeTarget) {
-      unsubscribeTarget();
-      unsubscribeTarget = null;
-    }
-
-    if (!user) {
-      dashboard.classList.add("hidden");
-      loginBox.classList.remove("hidden");
-      status("Въведи Firebase имейл и парола.");
-      return;
-    }
-
-    if (user.uid !== ALLOWED_UID) {
-      status("Този потребител няма достъп.");
-      await signOut(auth);
-      return;
-    }
-
-    loginBox.classList.add("hidden");
-    dashboard.classList.remove("hidden");
-    status("Свързано с Firebase.");
-
-    unsubscribeSensors = onValue(
-      ref(db, "sensors"),
-      (snapshot) => {
-        const data = snapshot.val() || {};
-
-        showNumber("temperature", data.temperature, "°C", 1);
-        showPercent("pellets", "pelletsBar", data.pellets);
-        showPercent("hydrofor", "hydroforBar", data.hydrofor);
-      },
-      (error) => {
-        status("Грешка при четене на датчиците: " + error.message);
-      }
-    );
-
-    unsubscribeTarget = onValue(
-      ref(db, "settings/target"),
-      (snapshot) => {
-        const value = Number(snapshot.val());
-
-        if (snapshot.exists() &&
-            Number.isFinite(value) &&
-            value >= 30 &&
-            value <= 65) {
-          document.getElementById("targetSlider").value = value;
-          document.getElementById("targetValue").textContent =
-            value + " °C";
-        }
-      },
-      (error) => {
-        status("Грешка при четене на настройката: " + error.message);
-      }
-    );
-  });
-
-  const slider = document.getElementById("targetSlider");
-
-  slider.oninput = () => {
-    document.getElementById("targetValue").textContent =
-      slider.value + " °C";
-  };
-
-  document.getElementById("saveTarget").onclick = async () => {
-    const target = Number(slider.value);
-    const button = document.getElementById("saveTarget");
-
-    button.disabled = true;
-
-    try {
-      await set(ref(db, "settings/target"), target);
-      status("Желаната температура е записана: " + target + " °C");
-    } catch (error) {
-      status("Грешка при запис: " + error.message);
-    } finally {
-      button.disabled = false;
-    }
-  };
+// Настройките на твоя Firebase проект. Тук НЕ се записват пароли.
+const firebaseConfig={
+  apiKey:"AIzaSyCjqK4oplUZqWLd31UWLNuoNosoC1y4lWM",
+  authDomain:"moeto-parno.firebaseapp.com",
+  databaseURL:"https://moeto-parno-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId:"moeto-parno",
+  storageBucket:"moeto-parno.firebasestorage.app",
+  messagingSenderId:"737083575899",
+  appId:"1:737083575899:web:3b5d95d08fe29299c8797e"
+};
+const $=id=>document.getElementById(id);
+const status=message=>{$('status').textContent=message;};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+let unsubscribeSensors=null,unsubscribeTarget=null;
+let targetFromCloud=false,editingTarget=false;
+function showNumber(id,value,unit,decimals=0){const n=Number(value);$(id).textContent=value!==null&&value!==undefined&&value!==''&&Number.isFinite(n)?n.toFixed(decimals)+' '+unit:'-- '+unit;}
+function showPercent(id,barId,value){const n=Number(value);const valid=value!==null&&value!==undefined&&value!==''&&Number.isFinite(n);$(id).textContent=valid?Math.round(n)+' %':'-- %';$(barId).style.width=valid?Math.max(0,Math.min(100,n))+'%':'0%';}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;try{status('Влизане...');await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value);$('password').value='';}catch(error){status('Грешка при вход: '+error.code);}finally{$('loginBtn').disabled=false;}});
+$('logoutBtn').addEventListener('click',()=>signOut(auth));
+onAuthStateChanged(auth,user=>{
+  if(unsubscribeSensors){unsubscribeSensors();unsubscribeSensors=null;}
+  if(unsubscribeTarget){unsubscribeTarget();unsubscribeTarget=null;}
+  targetFromCloud=false;editingTarget=false;
+  $('targetSlider').disabled=true;$('saveTarget').disabled=true;
+  if(!user){$('dashboard').classList.add('hidden');$('loginBox').classList.remove('hidden');status('Въведи Firebase имейл и парола.');return;}
+  $('loginBox').classList.add('hidden');$('dashboard').classList.remove('hidden');status('Свързано с Firebase. Зареждане на данните...');
+  unsubscribeSensors=onValue(ref(db,'sensors'),snapshot=>{const data=snapshot.val()||{};showNumber('temperature',data.temperature,'°C',1);showPercent('pellets','pelletsBar',data.pellets);showPercent('hydrofor','hydroforBar',data.hydrofor);status('Свързано с Firebase.');},error=>status('Грешка при четене на датчиците: '+error.message));
+  unsubscribeTarget=onValue(ref(db,'settings/target'),snapshot=>{const value=Number(snapshot.val());if(snapshot.exists()&&Number.isFinite(value)&&value>=30&&value<=65){targetFromCloud=true;$('targetSlider').disabled=false;$('saveTarget').disabled=false;if(!editingTarget){$('targetSlider').value=value;$('targetValue').textContent=value+' °C';}}else{targetFromCloud=false;$('targetSlider').disabled=false;$('saveTarget').disabled=false;$('targetValue').textContent=$('targetSlider').value+' °C';}},error=>{status('Грешка при четене на настройката: '+error.message);$('targetSlider').disabled=true;$('saveTarget').disabled=true;});
+},error=>status('Грешка при удостоверяване: '+error.message));
+$('targetSlider').addEventListener('input',()=>{editingTarget=true;$('targetValue').textContent=$('targetSlider').value+' °C';});
+$('saveTarget').addEventListener('click',async()=>{if(!auth.currentUser)return;const target=Number($('targetSlider').value);$('saveTarget').disabled=true;try{await set(ref(db,'settings/target'),target);editingTarget=false;status('Желаната температура е записана: '+target+' °C');}catch(error){status('Грешка при запис: '+error.message);}finally{$('saveTarget').disabled=false;}});
 </script>
 </body>
 </html>
