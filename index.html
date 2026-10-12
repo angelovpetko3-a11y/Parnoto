@@ -1,23 +1,42 @@
 <!DOCTYPE html>
-<html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="bg">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>🔥 Моето парно</title>
 <style>
-*{box-sizing:border-box}body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#101827;color:#fff}.container{max-width:650px;margin:auto}h1{text-align:center}.card{background:#1e293b;padding:22px;border-radius:16px;margin:15px 0}.label{color:#cbd5e1;font-size:18px}.value{font-size:38px;font-weight:bold;margin-top:12px}.bar{height:18px;background:#334155;border-radius:20px;overflow:hidden;margin-top:15px}.fill{height:100%;width:0;background:#22c55e;transition:width .4s}.water{background:#38bdf8}input[type=range]{width:100%;margin:22px 0}input[type=email],input[type=password]{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:0;font-size:16px}button{background:#f97316;color:#fff;border:0;padding:13px 20px;border-radius:9px;font-size:16px;cursor:pointer}button:disabled{opacity:.5}.hidden{display:none}.status{color:#fbbf24;text-align:center;margin:15px 0;overflow-wrap:anywhere}.small{color:#94a3b8;font-size:14px}.danger{background:#dc2626}
-</style></head><body><div class="container"><h1>🔥 Моето парно</h1>
+*{box-sizing:border-box}body{margin:0;padding:20px;font-family:Arial,sans-serif;background:#101827;color:#fff}.container{max-width:650px;margin:auto}h1{text-align:center}.card{background:#1e293b;padding:22px;border-radius:16px;margin:15px 0}.label{color:#cbd5e1;font-size:18px}.value{font-size:38px;font-weight:bold;margin-top:12px}.bar{height:18px;background:#334155;border-radius:20px;overflow:hidden;margin-top:15px}.fill{height:100%;width:0;background:#22c55e;transition:width .4s}.water{background:#38bdf8}input[type=range]{width:100%;margin:22px 0}input[type=email],input[type=password]{width:100%;padding:12px;margin:8px 0;border-radius:8px;border:0;font-size:16px}button{background:#f97316;color:#fff;border:0;padding:13px 20px;border-radius:9px;font-size:16px;cursor:pointer}button:disabled{opacity:.5}.danger{background:#dc2626}.green{background:#16a34a}.chart{width:100%;height:170px;background:#111827;border-radius:10px}.controls{display:flex;gap:8px;flex-wrap:wrap}.controls button{padding:9px 12px}.muted{color:#94a3b8;font-size:13px}.hidden{display:none}.status{color:#fbbf24;text-align:center;margin:15px 0;overflow-wrap:anywhere}.small{color:#94a3b8;font-size:14px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🔥 Моето парно</h1>
 <div id="status" class="status">Свързване с Firebase...</div>
-<div id="loginBox" class="card"><h2>🔐 Вход</h2><form id="loginForm"><input id="email" type="email" autocomplete="username" placeholder="Firebase имейл" required><input id="password" type="password" autocomplete="current-password" placeholder="Парола" required><button id="loginBtn" type="submit">Вход</button></form></div>
+<div id="loginBox" class="card">
+<h2>🔐 Вход</h2>
+<form id="loginForm">
+<input id="email" type="email" autocomplete="username" placeholder="Firebase имейл" required>
+<input id="password" type="password" autocomplete="current-password" placeholder="Парола" required>
+<button id="loginBtn" type="submit">Вход</button>
+</form>
+</div>
 <div id="dashboard" class="hidden">
 <div class="card"><div class="label">🌡️ Температура на водата</div><div id="temperature" class="value">-- °C</div></div>
 <div class="card"><div class="label">🌾 Ниво на пелетите</div><div id="pellets" class="value">-- %</div><div class="bar"><div id="pelletsBar" class="fill"></div></div></div>
 <div class="card"><div class="label">💧 Ниво на водата в хидрофора</div><div id="hydrofor" class="value">-- %</div><div class="bar"><div id="hydroforBar" class="fill water"></div></div></div>
 <div class="card"><div class="label">🎚️ Желана температура</div><div id="targetValue" class="value">-- °C</div><input id="targetSlider" type="range" min="30" max="65" step="1" value="55" disabled><button id="saveTarget" disabled>Запази температурата</button><p class="small">Настройката се записва във Firebase и се получава от NodeMCU.</p></div>
-<div class="card"><div class="label">Реле D0 — поддържане на температурата</div><div id="heatRelay" class="value">Неизвестно</div><p class="small">Това е последното състояние, докладвано от NodeMCU.</p></div>
-<div class="card"><div class="label">Реле D7 — ръчно спиране</div><div id="stopState" class="value">Неизвестно</div><button class="danger" id="stopBtn" disabled>СПРИ</button><p class="small">Един бутон за спиране и възстановяване през Firebase. Това не е сертифицирана аварийна защита.</p></div>
-<div class="card"><button id="logoutBtn">Изход</button></div></div></div>
+<div class="card"><h2>🔥 Отопление — D0</h2><p>Режим: <b id="heatMode">--</b></p><p>Реле: <b id="heatRelay">--</b></p><button id="heatToggle" disabled>Зареждане...</button><p class="small">СТАРТ разрешава автоматично отопление по температура. СТОП го забранява. Командата се изпълнява само ако ESP8266 поддържа облачно управление на D0.</p></div>
+<div class="card"><h2>🔄 Рестарт за грешка — D7</h2><p>Състояние: <b id="d7State">--</b></p><div class="controls"><button id="d7Stop" class="danger" disabled>Задействай</button><button id="d7Restore" disabled>Освободи</button></div><p class="small">Запазва досегашната логика на реле D7. Това не е сертифициран авариен стоп.</p></div>
+<div class="card"><h2>📈 Хронология — 30 дни</h2><div class="controls"><button data-days="1">24 часа</button><button data-days="7">7 дни</button><button data-days="30">30 дни</button></div><p class="muted" id="historyStatus">Зареждане...</p><h3>🌡️ Вода (°C)</h3><canvas class="chart" id="historyTemp"></canvas><h3>🌾 Пелети (%)</h3><canvas class="chart" id="historyPellets"></canvas><h3>💧 Хидрофор (%)</h3><canvas class="chart" id="historyHydrofor"></canvas><p class="small">Графиките изискват запис на измерванията във Firebase /history. Локалните записи в ESP8266 не са достъпни от GitHub.</p></div>
+<div class="card"><button id="logoutBtn">Изход</button></div>
+</div>
+</div>
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
 import {getAuth,signInWithEmailAndPassword,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-auth.js";
 import {getDatabase,ref,onValue,set} from "https://www.gstatic.com/firebasejs/10.12.5/firebase-database.js";
+
+// Настройките на твоя Firebase проект. Тук НЕ се записват пароли.
 const firebaseConfig={
   apiKey:"AIzaSyCjqK4oplUZqWLd31UWLNuoNosoC1y4lWM",
   authDomain:"moeto-parno.firebaseapp.com",
@@ -27,23 +46,41 @@ const firebaseConfig={
   messagingSenderId:"737083575899",
   appId:"1:737083575899:web:3b5d95d08fe29299c8797e"
 };
-const $=id=>document.getElementById(id), status=m=>$('status').textContent=m;
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app);
-let unsub=[],editingTarget=false,reportedStop=null;
+const $=id=>document.getElementById(id);
+const status=message=>{$('status').textContent=message;};
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getDatabase(app);
+let unsubscribeSensors=null,unsubscribeTarget=null,unsubscribeD0=null,unsubscribeD7=null,unsubscribeHistory=null;
+let heatMode=null, d7Mode=null, historyDays=1;
+let targetFromCloud=false,editingTarget=false;
 function showNumber(id,value,unit,decimals=0){const n=Number(value);$(id).textContent=value!==null&&value!==undefined&&value!==''&&Number.isFinite(n)?n.toFixed(decimals)+' '+unit:'-- '+unit;}
-function showPercent(id,barId,value){const n=Number(value),valid=value!==null&&value!==undefined&&value!==''&&Number.isFinite(n);$(id).textContent=valid?Math.round(n)+' %':'-- %';$(barId).style.width=valid?Math.max(0,Math.min(100,n))+'%':'0%';}
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;try{status('Влизане...');await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value);$('password').value='';}catch(e){status('Грешка при вход: '+e.code);}finally{$('loginBtn').disabled=false;}});
+function showPercent(id,barId,value){const n=Number(value);const valid=value!==null&&value!==undefined&&value!==''&&Number.isFinite(n);$(id).textContent=valid?Math.round(n)+' %':'-- %';$(barId).style.width=valid?Math.max(0,Math.min(100,n))+'%':'0%';}
+$('loginForm').addEventListener('submit',async e=>{e.preventDefault();$('loginBtn').disabled=true;try{status('Влизане...');await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value);$('password').value='';}catch(error){status('Грешка при вход: '+error.code);}finally{$('loginBtn').disabled=false;}});
 $('logoutBtn').addEventListener('click',()=>signOut(auth));
 onAuthStateChanged(auth,user=>{
-  unsub.forEach(f=>f());unsub=[];editingTarget=false;reportedStop=null;
-  $('targetSlider').disabled=true;$('saveTarget').disabled=true;$('stopBtn').disabled=true;
+  if(unsubscribeSensors){unsubscribeSensors();unsubscribeSensors=null;}
+  if(unsubscribeTarget){unsubscribeTarget();unsubscribeTarget=null;}
+  for(const key of ['unsubscribeD0','unsubscribeD7','unsubscribeHistory']){if(key==='unsubscribeD0'&&unsubscribeD0){unsubscribeD0();unsubscribeD0=null;}if(key==='unsubscribeD7'&&unsubscribeD7){unsubscribeD7();unsubscribeD7=null;}if(key==='unsubscribeHistory'&&unsubscribeHistory){unsubscribeHistory();unsubscribeHistory=null;}}
+  targetFromCloud=false;editingTarget=false;
+  $('targetSlider').disabled=true;$('saveTarget').disabled=true;
   if(!user){$('dashboard').classList.add('hidden');$('loginBox').classList.remove('hidden');status('Въведи Firebase имейл и парола.');return;}
-  $('loginBox').classList.add('hidden');$('dashboard').classList.remove('hidden');status('Свързано с Firebase. Зареждане...');
-  unsub.push(onValue(ref(db,'sensors'),s=>{const d=s.val()||{};showNumber('temperature',d.temperature,'°C',1);showPercent('pellets','pelletsBar',d.pellets);showPercent('hydrofor','hydroforBar',d.hydrofor);},e=>status('Грешка при датчиците: '+e.message)));
-  unsub.push(onValue(ref(db,'settings/target'),s=>{const n=Number(s.val());$('targetSlider').disabled=false;$('saveTarget').disabled=false;if(s.exists()&&Number.isFinite(n)&&n>=30&&n<=65&&!editingTarget){$('targetSlider').value=n;$('targetValue').textContent=n+' °C';}},e=>status('Грешка при температурата: '+e.message)));
-  unsub.push(onValue(ref(db,'status'),s=>{const d=s.val()||{};$('heatRelay').textContent=typeof d.heatRelayOn==='boolean'?(d.heatRelayOn?'ВКЛ.':'ИЗКЛ.'):'Няма данни';reportedStop=typeof d.emergencyStop==='boolean'?d.emergencyStop:null;$('stopState').textContent=reportedStop===null?'Няма данни':reportedStop?'СПРЯНО':'Нормално';$('stopBtn').disabled=reportedStop===null;$('stopBtn').textContent=reportedStop?'ВЪЗСТАНОВИ':'СПРИ';},e=>status('Грешка при състоянието: '+e.message)));
-},e=>status('Грешка при удостоверяване: '+e.message));
+  $('loginBox').classList.add('hidden');$('dashboard').classList.remove('hidden');status('Свързано с Firebase. Зареждане на данните...');
+  unsubscribeD0=onValue(ref(db,'status/heatManualEnabled'),snap=>{heatMode=typeof snap.val()==='boolean'?snap.val():null;const btn=$('heatToggle');btn.disabled=heatMode===null;btn.textContent=heatMode===null?'Няма данни от платката':(heatMode?'СТОП':'СТАРТ');btn.className=heatMode?'danger':'green';$('heatMode').textContent=heatMode===null?'Неподдържано':(heatMode?'СТАРТ':'СТОП');});
+  unsubscribeD7=onValue(ref(db,'status/emergencyStop'),snap=>{d7Mode=typeof snap.val()==='boolean'?snap.val():null;$('d7State').textContent=d7Mode===null?'--':(d7Mode?'Задействано':'Освободено');$('d7Stop').disabled=d7Mode===null||d7Mode;$('d7Restore').disabled=d7Mode===null||!d7Mode;});
+  onValue(ref(db,'status/heatRelayOn'),snap=>{$('heatRelay').textContent=snap.val()===true?'ВКЛ.':snap.val()===false?'ИЗКЛ.':'--';},{onlyOnce:true});
+  loadHistory(historyDays);
+  unsubscribeSensors=onValue(ref(db,'sensors'),snapshot=>{const data=snapshot.val()||{};showNumber('temperature',data.temperature,'°C',1);showPercent('pellets','pelletsBar',data.pellets);showPercent('hydrofor','hydroforBar',data.hydrofor);status('Свързано с Firebase.');},error=>status('Грешка при четене на датчиците: '+error.message));
+  unsubscribeTarget=onValue(ref(db,'settings/target'),snapshot=>{const value=Number(snapshot.val());if(snapshot.exists()&&Number.isFinite(value)&&value>=30&&value<=65){targetFromCloud=true;$('targetSlider').disabled=false;$('saveTarget').disabled=false;if(!editingTarget){$('targetSlider').value=value;$('targetValue').textContent=value+' °C';}}else{targetFromCloud=false;$('targetSlider').disabled=false;$('saveTarget').disabled=false;$('targetValue').textContent=$('targetSlider').value+' °C';}},error=>{status('Грешка при четене на настройката: '+error.message);$('targetSlider').disabled=true;$('saveTarget').disabled=true;});
+},error=>status('Грешка при удостоверяване: '+error.message));
 $('targetSlider').addEventListener('input',()=>{editingTarget=true;$('targetValue').textContent=$('targetSlider').value+' °C';});
-$('saveTarget').addEventListener('click',async()=>{if(!auth.currentUser)return;const n=Number($('targetSlider').value);$('saveTarget').disabled=true;try{await set(ref(db,'settings/target'),n);editingTarget=false;status('Температурата е записана: '+n+' °C');}catch(e){status('Грешка при запис: '+e.message);}finally{$('saveTarget').disabled=false;}});
-$('stopBtn').addEventListener('click',async()=>{if(!auth.currentUser||reportedStop===null)return;const desired=!reportedStop;if(!confirm(desired?'Да изпратя СПРИ?':'Да изпратя ВЪЗСТАНОВИ?'))return;$('stopBtn').disabled=true;try{await set(ref(db,'commands/manualStop'),desired);status('Командата е изпратена. Изчаква се потвърждение от NodeMCU в полето за състояние.');}catch(e){status('Грешка при изпращане: '+e.message);}finally{if(reportedStop!==null)$('stopBtn').disabled=false;}});
-</script></body></html>
+$('saveTarget').addEventListener('click',async()=>{if(!auth.currentUser)return;const target=Number($('targetSlider').value);$('saveTarget').disabled=true;try{await set(ref(db,'settings/target'),target);editingTarget=false;status('Желаната температура е записана: '+target+' °C');}catch(error){status('Грешка при запис: '+error.message);}finally{$('saveTarget').disabled=false;}});
+$('heatToggle').addEventListener('click',async()=>{if(!auth.currentUser||heatMode===null)return;const next=!heatMode;if(!confirm(next?'Разрешаване на автоматичното отопление?':'Спиране на отоплението?'))return;const b=$('heatToggle');b.disabled=true;try{await set(ref(db,'commands/heatManualEnabled'),next);status('Командата е изпратена. Изчаква се потвърждение от ESP8266.');}catch(e){status('Грешка: '+e.message);}finally{b.disabled=false;}});
+async function setD7(stop){if(!auth.currentUser)return;if(!confirm(stop?'Да задействам D7?':'Да освободя D7?'))return;try{await set(ref(db,'commands/manualStop'),stop);status('Командата за D7 е изпратена.');}catch(e){status('Грешка: '+e.message);}}
+$('d7Stop').addEventListener('click',()=>setD7(true));$('d7Restore').addEventListener('click',()=>setD7(false));
+function drawChart(id,points,key){const c=$(id),ctx=c.getContext('2d');const w=Math.max(260,c.clientWidth),h=170,ratio=window.devicePixelRatio||1;c.width=w*ratio;c.height=h*ratio;ctx.scale(ratio,ratio);ctx.clearRect(0,0,w,h);ctx.strokeStyle='#334155';ctx.lineWidth=1;for(let i=1;i<=3;i++){let y=i*h/4;ctx.beginPath();ctx.moveTo(30,y);ctx.lineTo(w-8,y);ctx.stroke();}const valid=points.filter(p=>Number.isFinite(Number(p[key])));if(!valid.length){ctx.fillStyle='#94a3b8';ctx.font='14px Arial';ctx.fillText('Няма записани данни',36,85);return;}const values=valid.map(p=>Number(p[key]));let min=Math.min(...values),max=Math.max(...values);if(min===max){min-=1;max+=1;}const left=35,right=w-10,top=14,bottom=h-23;ctx.strokeStyle='#f59e0b';ctx.lineWidth=2;ctx.beginPath();valid.forEach((p,i)=>{const x=left+(right-left)*(valid.length===1?.5:i/(valid.length-1));const y=bottom-(Number(p[key])-min)/(max-min)*(bottom-top);if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);});ctx.stroke();ctx.fillStyle='#cbd5e1';ctx.font='11px Arial';ctx.fillText(max.toFixed(1),2,top+6);ctx.fillText(min.toFixed(1),2,bottom);}
+function loadHistory(days){historyDays=days;if(unsubscribeHistory){unsubscribeHistory();unsubscribeHistory=null;}if(!auth.currentUser)return;$('historyStatus').textContent='Зареждане на '+days+' дни...';const cutoff=Date.now()-days*86400000;unsubscribeHistory=onValue(ref(db,'history'),snap=>{const rows=[];const walk=(node)=>{if(!node||typeof node!=='object')return;if(typeof node.ts==='number'||typeof node.timestamp==='number'){rows.push(node);return;}Object.values(node).forEach(walk);};walk(snap.val());const points=rows.map(r=>({ts:Number(r.ts??r.timestamp),temperature:r.temperature,pellets:r.pellets,hydrofor:r.hydrofor})).filter(r=>r.ts>0&&(r.ts<1e11?r.ts*1000:r.ts)>=cutoff).sort((a,b)=>a.ts-b.ts);drawChart('historyTemp',points,'temperature');drawChart('historyPellets',points,'pellets');drawChart('historyHydrofor',points,'hydrofor');$('historyStatus').textContent=points.length?points.length+' записа за последните '+days+' дни':'Няма история във Firebase за този период.';},e=>$('historyStatus').textContent='Грешка при четене на историята: '+e.message);}
+document.querySelectorAll('[data-days]').forEach(b=>b.addEventListener('click',()=>loadHistory(Number(b.dataset.days))));
+</script>
+</body>
+</html>
